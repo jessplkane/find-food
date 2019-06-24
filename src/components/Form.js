@@ -6,6 +6,7 @@ import { CLIENT_ID, CLIENT_SECRET, DATE } from "../utils/constants";
 import { userDeniedLocation, getRandomNumber } from "../utils/helpers";
 
 // TODO: Add tooltip for users that have not allowed location access
+// TODO: Add filter for price, default 1-2 but allow up to 4
 
 const Form = () => {
   const [loading, setLoading] = useState(false);
@@ -48,18 +49,18 @@ const Form = () => {
 
     axios.get(url).then(res => {
       console.log(res);
-      // const randomSelectedNumber = getRandomNumber(
-      //   res.data.response.groups[0].items.length
-      // );
+      const randomSelectedNumber = getRandomNumber(
+        res.data.response.groups[0].items.length
+      );
 
-      // setResults(res.data.response.groups[0].items[randomSelectedNumber]);
+      setResults(res.data.response.groups[0].items[randomSelectedNumber]);
     });
   };
 
   return (
     <div>
       <h1>hello</h1>
-      {/* {console.log(results)} */}
+      {console.log(results)}
 
       {loading && <p>Finding location...</p>}
 
@@ -77,6 +78,14 @@ const Form = () => {
           <button type="submit" onClick={handleGetChoices}>
             Find food!
           </button>
+        </div>
+      )}
+
+      {results && (
+        <div>
+          <h3>{results.venue.name}</h3>
+          <p>Category: {results.venue.categories[0].name}</p>
+          <p>Price: </p>
         </div>
       )}
     </div>
