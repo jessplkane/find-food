@@ -40,12 +40,12 @@ const Form = () => {
   const handleGetChoices = () => {
     const url =
       error && userDeniedLocation(error)
-        ? `https://api.foursquare.com/v2/venues/explore?near=${userInput}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${DATE}&section=food`
+        ? `https://api.foursquare.com/v2/venues/explore?near=${userInput}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${DATE}&section=food&price=1,2,3,4`
         : `https://api.foursquare.com/v2/venues/explore?ll=${
             userLocation.lat
           },${
             userLocation.lng
-          }&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${DATE}&section=food`;
+          }&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${DATE}&section=food&price=1,2,3,4`;
 
     axios.get(url).then(res => {
       console.log(res);
@@ -60,7 +60,6 @@ const Form = () => {
   return (
     <div>
       <h1>hello</h1>
-      {console.log(results)}
 
       {loading && <p>Finding location...</p>}
 
@@ -85,7 +84,6 @@ const Form = () => {
         <div>
           <h3>{results.venue.name}</h3>
           <p>Category: {results.venue.categories[0].name}</p>
-          <p>Price: </p>
         </div>
       )}
     </div>
