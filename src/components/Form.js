@@ -5,6 +5,8 @@ import { geoLocation } from "../services/GetLocation";
 import { CLIENT_ID, CLIENT_SECRET, DATE } from "../utils/constants";
 import { userDeniedLocation, getRandomNumber } from "../utils/helpers";
 
+import "./Form.scss";
+
 // TODO: Add tooltip for users that have not allowed location access
 // TODO: Add filter for price, default 1-2 but allow up to 4
 
@@ -14,6 +16,7 @@ const Form = () => {
   const [userInput, setUserInput] = useState(null);
   const [error, setError] = useState(null);
   const [results, setResults] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getUserLocation();
@@ -37,6 +40,21 @@ const Form = () => {
     return setUserInput(e.target.value);
   };
 
+  const expandDetails = () => {
+    const venueId = results.venue.id;
+
+    axios
+      .get(
+        `https://api.foursquare.com/v2/venues/${venueId}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${DATE}
+    `
+      )
+      .then(res => {
+        console.log(res);
+      });
+
+    return setIsOpen(!isOpen);
+  };
+
   const handleGetChoices = () => {
     const url =
       error && userDeniedLocation(error)
@@ -55,6 +73,10 @@ const Form = () => {
 
       setResults(res.data.response.groups[0].items[randomSelectedNumber]);
     });
+  };
+
+  const isAccordionOpen = () => {
+    return isOpen ? "Accordion__item Accordion__item--open" : "Accordion__item";
   };
 
   return (
@@ -83,7 +105,13 @@ const Form = () => {
       {results && (
         <div>
           <h3>{results.venue.name}</h3>
+
           <p>Category: {results.venue.categories[0].name}</p>
+
+          <ul className="Accordion" onClick={expandDetails}>
+            <p>Expand to see more details +</p>
+            <li className={isAccordionOpen()}>hidden</li>
+          </ul>
         </div>
       )}
     </div>
